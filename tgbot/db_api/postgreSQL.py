@@ -95,8 +95,8 @@ class Database:
         username VARCHAR(255) NULL,
         telegram_id BIGINT NOT NULL UNIQUE,
         priglos VARCHAR(255) NULL,
-        referals INT NULL,
-        skidka INT NULL
+        referals INT NULL DEFAULT 0,
+        skidka INT NULL DEFAULT 0
         );
         """
         await self.execute(sql, execute=True)
@@ -156,11 +156,11 @@ class Database:
         return await self.execute(sql, fetch=True)
 
     async def count_referal(self, telegram_id):
-        sql = 'UPDATE Users SET referals = CASE WHEN referals IS NULL THEN 1 ELSE referals + 1 END WHERE telegram_id = $1'
+        sql = 'UPDATE Users SET referals = referals + 1 WHERE telegram_id = $1'
         return await self.execute(sql, telegram_id, execute=True)
 
     async def count_skidka(self, telegram_id):
-        sql = 'UPDATE Users SET skidka = CASE WHEN skidka IS NULL THEN 10 ELSE skidka + 10 END WHERE telegram_id = $1'
+        sql = 'UPDATE Users SET skidka = skidka + 1 WHERE telegram_id = $1'
         return await self.execute(sql, telegram_id, execute=True)
 
     def gene_parol(self):
@@ -178,11 +178,11 @@ class Database:
         return await self.execute(sql, fetch=True)
 
     async def count_referal2(self, priglos):
-        sql = 'UPDATE Users SET referals = CASE WHEN referals IS NULL THEN 1 ELSE referals + 1 END WHERE priglos = $1'
+        sql = 'UPDATE Users SET referals = referals + 1 WHERE priglos = $1'
         return await self.execute(sql, priglos, execute=True)
 
     async def count_skidka2(self, priglos):
-        sql = 'UPDATE Users SET skidka = CASE WHEN skidka IS NULL THEN 10 ELSE skidka + 10 END WHERE priglos = $1'
+        sql = 'UPDATE Users SET skidka = skidka + 1 WHERE priglos = $1'
         return await self.execute(sql, priglos, execute=True)
 
     async def referalka1(self, telegram_id):
