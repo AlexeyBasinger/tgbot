@@ -19,7 +19,6 @@ async def nasad_v_menu(call: CallbackQuery):
 
 
 async def proverka_bought_tovar(call: CallbackQuery):
-    await call.answer(cache_time=5)
     a = await db.prosmot_tovar_bought(call.from_user.id)
     result = 'Вы заказали:\n'
     if a:
@@ -27,7 +26,7 @@ async def proverka_bought_tovar(call: CallbackQuery):
             result += f'{b[0]} в количестве: {b[1]}\n'
         await call.message.answer(result)
     else:
-        await call.message.answer('Вы пока ничего не заказали')
+        await call.answer('Вы пока ничего не заказали', cache_time=5, show_alert=True)
 
 
 def register_user(dp: Dispatcher):
