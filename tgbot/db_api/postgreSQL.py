@@ -230,11 +230,9 @@ class Database:
         check_oplata.tovar_id WHERE user_id = $1 AND oplata_state = 1;'''
         return await self.execute(sql, user_id, fetch=True)
 
-
     async def poluchit_skidka(self, user_id):
         sql = 'SELECT skidka FROM Users WHERE telegram_id = $1'
         return await self.execute(sql, user_id, fetchval=True)
-
 
     async def ubrat_skidku(self, user_id):
         sql = 'UPDATE Users SET skidka = 0 WHERE telegram_id = $1'
@@ -243,3 +241,7 @@ class Database:
     async def dobavit_skidku(self, user_id, skidka):
         sql = 'UPDATE Users SET skidka = $2 WHERE telegram_id = $1'
         await self.execute(sql, user_id, skidka, execute=True)
+
+    async def skidka_show_true(self, parol):
+        sql = 'SELECT True FROM Users WHERE priglos = $1'
+        return await self.execute(sql, parol, fetchval=True)

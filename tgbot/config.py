@@ -1,10 +1,10 @@
 from dataclasses import dataclass
-
 from environs import Env
-
 from tgbot.db_api.postgreSQL import Database
 
 db = Database()
+
+
 @dataclass
 class DbConfig:
     host: str
@@ -24,6 +24,7 @@ class TgBot:
 class Miscellaneous:
     other_params: str = None
 
+
 @dataclass
 class Qiwi_oplata:
     token: str
@@ -31,13 +32,13 @@ class Qiwi_oplata:
     secret_token: str
     open_token: str
 
+
 @dataclass
 class Config:
     tg_bot: TgBot
     db: DbConfig
     misc: Miscellaneous
     qiwi: Qiwi_oplata
-
 
 
 def load_config(path: str = None):

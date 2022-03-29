@@ -15,8 +15,11 @@ async def code_invite(call: CallbackQuery, state: FSMContext):
 async def wait_code(message: Message, state: FSMContext):
     if message.text in hcode(await db.vse_paroli()):
         try:
+            b = db.gene_parol()
+            while await db.skidka_show_true(b):
+                b = db.gene_parol()
             user = await db.add_user(full_name=message.from_user.full_name, username=message.from_user.username,
-                                     telegram_id=message.from_user.id, par=db.gene_parol())
+                                     telegram_id=message.from_user.id, par=b)
             await db.count_referal2(message.text)
             await db.count_skidka2(message.text)
 

@@ -13,8 +13,11 @@ async def user_start(message: Message):
     args = message.get_args()
     if args in hcode(await db.args_id()):
         try:
+            b = db.gene_parol()
+            while await db.skidka_show_true(b):
+                b = db.gene_parol()
             user = await db.add_user(full_name=message.from_user.full_name, username=message.from_user.username,
-                                     telegram_id=message.from_user.id, par=db.gene_parol())
+                                     telegram_id=message.from_user.id, par=b)
 
             await db.count_referal(int(args))
             await db.count_skidka(int(args))
@@ -77,8 +80,11 @@ async def proverka_subscribe(call: CallbackQuery):
     state = await call.bot.get_chat_member(chat_id=-1001703741168, user_id=call.from_user.id)
     if state.is_chat_member():
         try:
+            b = db.gene_parol()
+            while await db.skidka_show_true(b):
+                b = db.gene_parol()
             user = await db.add_user(full_name=call.from_user.full_name, username=call.from_user.username,
-                                     telegram_id=call.from_user.id, par=db.gene_parol())
+                                     telegram_id=call.from_user.id, par=b)
         except asyncpg.exceptions.UniqueViolationError:
             user = await db.select_user(telegram_id=call.from_user.id)
 
