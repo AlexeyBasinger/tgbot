@@ -245,3 +245,7 @@ class Database:
     async def skidka_show_true(self, parol):
         sql = 'SELECT True FROM Users WHERE priglos = $1'
         return await self.execute(sql, parol, fetchval=True)
+
+    async def right_udoli(self, articul):
+        sql = 'SELECT True FROM katalog WHERE articul = $1'
+        return await self.execute(sql, articul, fetchval=True)

@@ -4,7 +4,7 @@ from aiogram.types import CallbackQuery, Message, ContentType
 
 from tgbot.config import db
 from tgbot.db_api.FSM import tovar
-from tgbot.keyboards.inline import cancel_inline_button, menu
+from tgbot.keyboards.inline import cancel_inline_button, menu, potverdit_tovar, menu_admin
 
 
 async def dobavit_t(call: CallbackQuery):
@@ -53,11 +53,25 @@ async def tovar_amount(message: Message, state: FSMContext):
 
 
 async def tovar_articul(message: Message, state: FSMContext):
+    async with state.proxy() as data:
+        data['articul'] = int(message.text)
+    data = await state.get_data()
+    await message.bot.send_photo(chat_id=message.chat.id, photo=data.get('photo'),
+                                 caption=f'аритикул: <b>{data.get("articul")}</b>\n'
+                                         f'название: <b>{data.get("name")}</b>\n'
+                                         f'количество: <b>{data.get("amount")}</b>\n'
+                                         f'Описание: <b>{data.get("description")}</b>\n'
+                                         f'Цена: <b>{data.get("price")}</b> Руб.',
+                                 parse_mode='HTML', reply_markup=potverdit_tovar)
+
+
+async def dobavit_tovar_pop(call: CallbackQuery, state: FSMContext):
     data = await state.get_data()
     await db.add_tovar(img=data.get('photo'), name=data.get('name'), description=data.get('description'),
-                       price=data.get('price'), amount=data.get('amount'), articul=int(message.text))
+                       price=data.get('price'), amount=data.get('amount'), articul=data.get('articul'))
     await state.finish()
-    await message.answer('Товар добавлен', reply_markup=menu)
+    await call.message.answer('Товар добавлен', reply_markup=menu_admin)
+    await call.answer()
 
 
 async def udalit_tovar(call: CallbackQuery, state: FSMContext):
@@ -69,9 +83,15 @@ async def udalit_tovar(call: CallbackQuery, state: FSMContext):
 
 
 async def udalyu(message: Message, state: FSMContext):
-    await db.udoli_pls(int(message.text))
-    await message.answer('Удалено', reply_markup=menu)
-    await state.finish()
+    try:
+        if await db.right_udoli(int(message.text)):
+            await db.udoli_pls(int(message.text))
+            await message.answer('Удалено', reply_markup=menu_admin)
+            await state.finish()
+        else:
+            await message.answer('Такого артикула нету в базе данных')
+    except ValueError:
+        await message.answer('Введите только число(номер артикула)!')
 
 
 async def otmena(call: CallbackQuery, state=FSMContext):
@@ -79,8 +99,16 @@ async def otmena(call: CallbackQuery, state=FSMContext):
     if cur_state is None:
         return
     await state.finish()
-    await call.message.edit_text('Операция была отменена', reply_markup=menu)
+    await call.message.delete()
+    await call.message.answer('Операция была отменена', reply_markup=menu)
     await call.answer()
+
+
+async def sanovo_vse(call: CallbackQuery, state: FSMContext):
+    await state.finish()
+    await call.message.delete()
+    await tovar.img.set()
+    await call.message.answer('Пришли фото товара!!!', reply_markup=cancel_inline_button)
 
 
 def register_insert_delete_handlers(dp: Dispatcher):
@@ -91,6 +119,8 @@ def register_insert_delete_handlers(dp: Dispatcher):
     dp.register_message_handler(tovar_price, state=tovar.price)
     dp.register_message_handler(tovar_amount, state=tovar.amount)
     dp.register_message_handler(tovar_articul, state=tovar.articul)
+    dp.register_callback_query_handler(dobavit_tovar_pop, text='confirm_tovar_srochno', state=tovar.articul)
+    dp.register_callback_query_handler(sanovo_vse, text='davai_po_novoi', state=tovar.articul)
     dp.register_callback_query_handler(udalit_tovar, text='udalit_tovar')
     dp.register_message_handler(udalyu, state='udoli_art')
     dp.register_callback_query_handler(otmena, text='otmena_pls', state='*')

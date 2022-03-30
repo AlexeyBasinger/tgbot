@@ -9,7 +9,6 @@ from aiogram.types import Message, CallbackQuery
 from aiogram.utils.markdown import hcode
 
 from tgbot.config import db
-from tgbot.db_api.FSM import tovar
 from tgbot.keyboards.inline import code, menu_admin, menu_admina_2, cancel_inline_button
 from tgbot.payment.QIWI import p2p
 
@@ -96,7 +95,8 @@ async def otmena_admin(call: CallbackQuery, state=FSMContext):
     if cur_state is None:
         return
     await state.finish()
-    await call.message.edit_text('❌Операция была отменена', reply_markup=menu_admin)
+    await call.message.delete()
+    await call.message.answer('❌Операция была отменена', reply_markup=menu_admin)
     await call.answer()
 
 
@@ -152,20 +152,6 @@ async def proverka_subscribe_admin(call: CallbackQuery):
                                   f'Затем нажми на кнопку проверить подписку', reply_markup=code)
 
 
-async def tovar_articul_admin(message: Message, state: FSMContext):
-    data = await state.get_data()
-    await db.add_tovar(img=data.get('photo'), name=data.get('name'), description=data.get('description'),
-                       price=data.get('price'), amount=data.get('amount'), articul=int(message.text))
-    await state.finish()
-    await message.answer('Товар добавлен', reply_markup=menu_admin)
-
-
-async def udalyu_admin(message: Message, state: FSMContext):
-    await db.udoli_pls(int(message.text))
-    await message.answer('Удалено', reply_markup=menu_admin)
-    await state.finish()
-
-
 async def provekra_pay_admin(call: CallbackQuery):
     await call.answer(cache_time=10)
     bill = call.data[6:]
@@ -174,8 +160,8 @@ async def provekra_pay_admin(call: CallbackQuery):
         if str(p2p.check(bill_id=bill).status) == 'PAID':
             await call.message.delete()
             await call.message.answer('Товар успешно оплачен\n'
-                                         'Доставка будет реализована в течении 5 дней\n'
-                                         'Обратная связь по телефону +79165502550', reply_markup=menu_admin)
+                                      'Доставка будет реализована в течении 5 дней\n'
+                                      'Обратная связь по телефону +79165502550', reply_markup=menu_admin)
             await db.update_price(bill)
             a = list(await db.oplata_set_state(bill))
             await db.update_amount_tovarov(a[0], a[1])
@@ -191,9 +177,7 @@ def register_admin(dp: Dispatcher):
     dp.register_callback_query_handler(nasad_v_menu_admin, text='nasad_pls', is_admin=True)
     dp.register_callback_query_handler(otmena_admin, text='otmena_pls', state='*', is_admin=True)
     dp.register_callback_query_handler(panel_administrator, text='pokash_panel_admina', is_admin=True)
-    dp.register_callback_query_handler(rassilka_waiting, text='rassilka_pls', is_admin=True)
-    dp.register_message_handler(rassilka_go, state='text_rassilki', is_admin=True)
+    dp.register_callback_query_handler(rassilka_waiting, text='rassilka_pls')
+    dp.register_message_handler(rassilka_go, state='text_rassilki')
     dp.register_callback_query_handler(proverka_subscribe_admin, text='proverka_kanal', is_admin=True)
-    dp.register_message_handler(tovar_articul_admin, state=tovar.articul, is_admin=True)
-    dp.register_message_handler(udalyu_admin, state='udoli_art', is_admin=True)
     dp.register_callback_query_handler(provekra_pay_admin, text_contains='check_', is_admin=True)

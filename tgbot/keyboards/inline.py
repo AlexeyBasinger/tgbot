@@ -48,3 +48,11 @@ menu_admina_2.insert(nasad_menu)
 cancel_inline_button = InlineKeyboardMarkup()
 cancel_button = InlineKeyboardButton(text='❌Отмена', callback_data='otmena_pls')
 cancel_inline_button.insert(cancel_button)
+
+
+potverdit_tovar = InlineKeyboardMarkup(row_width=1)
+da_potverdit = InlineKeyboardButton(text='Добавить товар', callback_data='confirm_tovar_srochno')
+sanovo = InlineKeyboardButton(text='Ввести все заново', callback_data='davai_po_novoi')
+potverdit_tovar.insert(da_potverdit)
+potverdit_tovar.insert(sanovo)
+potverdit_tovar.insert(cancel_button)
