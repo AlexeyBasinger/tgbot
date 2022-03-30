@@ -70,6 +70,7 @@ async def dobavit_tovar_pop(call: CallbackQuery, state: FSMContext):
     await db.add_tovar(img=data.get('photo'), name=data.get('name'), description=data.get('description'),
                        price=data.get('price'), amount=data.get('amount'), articul=data.get('articul'))
     await state.finish()
+    await call.message.delete()
     await call.message.answer('Товар добавлен', reply_markup=menu_admin)
     await call.answer()
 
