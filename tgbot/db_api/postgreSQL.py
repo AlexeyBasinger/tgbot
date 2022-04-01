@@ -249,3 +249,7 @@ class Database:
     async def right_udoli(self, articul):
         sql = 'SELECT True FROM katalog WHERE articul = $1'
         return await self.execute(sql, articul, fetchval=True)
+
+    async def poluchit_id_inline_mod(self, telegram_id):
+        sql = 'SELECT True FROM Users WHERE telegram_id = $1'
+        return await self.execute(sql, telegram_id, fetchval=True)
