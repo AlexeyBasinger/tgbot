@@ -253,3 +253,7 @@ class Database:
     async def poluchit_id_inline_mod(self, telegram_id):
         sql = 'SELECT True FROM Users WHERE telegram_id = $1'
         return await self.execute(sql, telegram_id, fetchval=True)
+
+    async def poluchit_poshalusta_id_true(self, telegram_id):
+        sql = 'SELECT True FROM Users WHERE telegram_id = $1'
+        return await self.execute(sql, telegram_id, fetchval=True)
