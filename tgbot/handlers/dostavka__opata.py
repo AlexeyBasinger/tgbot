@@ -22,16 +22,18 @@ async def dostavka_dannie(call: CallbackQuery, state: FSMContext):
 
 
 async def amount_tovara(message: Message, state: FSMContext):
-    data = await state.get_data()
-    if int(message.text) <= await db.amount_tovarov(tovar_id=data.get('tovar_id')):
-        async with state.proxy() as data:
-            data['amount'] = int(message.text)
-            await oplata_ru.next()
-            await message.answer('Введите адрес доставки\n'
-                                 'Город,улицу,дом', reply_markup=cancel_inline_button)
-    else:
-        await message.answer(f'Товаров на складе: {await db.amount_tovarov(tovar_id=data.get("tovar_id"))}')
-
+    try:
+        data = await state.get_data()
+        if int(message.text) <= await db.amount_tovarov(tovar_id=data.get('tovar_id')):
+            async with state.proxy() as data:
+                data['amount'] = int(message.text)
+                await oplata_ru.next()
+                await message.answer('Введите адрес доставки\n'
+                                     'Город,улицу,дом', reply_markup=cancel_inline_button)
+        else:
+            await message.answer(f'Товаров на складе: {await db.amount_tovarov(tovar_id=data.get("tovar_id"))}')
+    except ValueError:
+        await message.answer('Введите только число!')
 
 async def dostavka_street(message: Message, state: FSMContext):
     data = await state.get_data()

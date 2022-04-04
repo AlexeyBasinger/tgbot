@@ -28,7 +28,7 @@ async def wait_code(message: Message, state: FSMContext):
             user = await db.select_user(telegram_id=message.from_user.id)
 
         await message.answer('🎉Поздравляю, вы получили доступ🎉\n'
-                             'Вы можете получить 10 бонусных рублей за каждого преглашонного реферала!!!\n'
+                             'Вы можете получить 1 бонусный долар за каждого преглашонного реферала!!!\n'
                              f'Ваша реферальная ссылка: https://t.me/udemy_exam_bot?start={message.from_user.id}\n'
                              f'Ваш код приглашения: {await db.priglos_id(message.from_user.id)}', reply_markup=menu)
 

@@ -257,3 +257,16 @@ class Database:
     async def poluchit_poshalusta_id_true(self, telegram_id):
         sql = 'SELECT True FROM Users WHERE telegram_id = $1'
         return await self.execute(sql, telegram_id, fetchval=True)
+
+    async def upgrade_price_articul(self, price, articul):
+        sql = 'UPDATE katalog SET price = $1 WHERE articul = $2'
+        await self.execute(sql, price, articul, execute=True)
+
+    async def help_me(self, articul):
+        sql = "SELECT True FROM katalog WHERE articul = $1"
+        return await self.execute(sql, articul, fetchval=True)
+
+
+    async def update_amount_articul(self, amount, articul):
+        sql = 'UPDATE katalog SET amount = $1 WHERE articul = $2'
+        await self.execute(sql, amount, articul, execute=True)

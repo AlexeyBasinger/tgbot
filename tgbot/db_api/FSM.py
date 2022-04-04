@@ -13,3 +13,13 @@ class tovar(StatesGroup):
 class oplata_ru(StatesGroup):
     amount = State()
     street = State()
+
+
+class price(StatesGroup):
+    articul = State()
+    price = State()
+
+
+class amount(StatesGroup):
+    articul = State()
+    amount = State()

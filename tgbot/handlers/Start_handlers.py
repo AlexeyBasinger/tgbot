@@ -28,7 +28,7 @@ async def user_start(message: Message):
             user = await db.select_user(telegram_id=message.from_user.id)
 
         await message.answer(f'Поздравляю, вы получили доступ🎉\n'
-                             f'Вы можете получить 10 бонусных доларов за каждого приглашенного реферала!!!\n'
+                             f'Вы можете получить 1 бонусный долар за каждого приглашенного реферала!!!\n'
                              f'Ваша реферальная ссылка: https://t.me/udemy_exam_bot?start={message.from_user.id}\n'
                              f'Ваш код приглашения: {await db.priglos_id(telegram_id=message.from_user.id)}\n',
                              reply_markup=menu)
@@ -49,7 +49,7 @@ async def start_netdipa(message: Message):
     user_id = int(message.from_user.id)
     if await db.poluchit_poshalusta_id_true(user_id):
         await message.answer(f'Поздравляю, вы получили доступ🎉\n'
-                             f'Вы можете получить 10 бонусных доларов за каждого приглашенного реферала!!!\n'
+                             f'Вы можете получить 1 бонусный долар за каждого приглашенного реферала!!!\n'
                              f'Ваша реферальная ссылка: https://t.me/udemy_exam_bot?start={user_id}\n'
                              f'Ваш код приглашения: {await db.priglos_id(telegram_id=user_id)}\n',
                              reply_markup=menu)
@@ -97,7 +97,7 @@ async def proverka_subscribe(call: CallbackQuery):
             user = await db.select_user(telegram_id=call.from_user.id)
 
         await call.message.edit_text(f'Поздравляю, вы получили доступ🎉\n'
-                                     f'Вы можете получить 10 бонусных доларов за каждого приглашенного реферала!!!\n'
+                                     f'Вы можете получить 1 бонусный долар за каждого приглашенного реферала!!!\n'
                                      f'Ваша реферальная ссылка: https://t.me/udemy_exam_bot?start={call.from_user.id}\n'
                                      f'Ваш код приглашения: {await db.priglos_id(telegram_id=call.from_user.id)}\n',
                                      reply_markup=menu)

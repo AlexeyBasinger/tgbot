@@ -13,7 +13,7 @@ async def referal(call: CallbackQuery):
 async def nasad_v_menu(call: CallbackQuery):
     await call.answer()
     await call.message.edit_text(f'🎉Поздравляю, вы получили доступ🎉\n'
-                                 f'Вы можете получить 10 бонусных рублей за каждого преглашонного реферала!!!\n'
+                                 f'Вы можете получить 1 бонусный долар за каждого преглашонного реферала!!!\n'
                                  f'Ваша реферальная ссылка: https://t.me/udemy_exam_bot?start={call.from_user.id}\n'
                                  f'Ваш код приглашения: {await db.priglos_id(call.from_user.id)}', reply_markup=menu)
 
