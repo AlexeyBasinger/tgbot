@@ -35,6 +35,7 @@ async def amount_tovara(message: Message, state: FSMContext):
     except ValueError:
         await message.answer('Введите только число!')
 
+
 async def dostavka_street(message: Message, state: FSMContext):
     data = await state.get_data()
     comment = message.from_user.id
@@ -53,7 +54,6 @@ async def dostavka_street(message: Message, state: FSMContext):
         skidka = math.floor(skidka / 100)
         await db.dobavit_skidku(message.from_user.id, skidka)
 
-
     bill = p2p.bill(amount=total, lifetime=10,
                     comment=comment)
     await db.insert_in_tovar_oplata(user_id=message.from_user.id, tovar_id=data.get('tovar_id'),
@@ -61,7 +61,8 @@ async def dostavka_street(message: Message, state: FSMContext):
                                     bill_id=str(bill.bill_id))
     await state.finish()
     await message.answer('Осталось оплатить товар\nСкидка за рефералов применяется автоматически\nно товар не может '
-                         'стоить меньше рубля', reply_markup=InlineKeyboardMarkup( inline_keyboard=[[InlineKeyboardButton(text='Оплатить', url=bill.pay_url)],
+                         'стоить меньше рубля', reply_markup=InlineKeyboardMarkup(
+        inline_keyboard=[[InlineKeyboardButton(text='Оплатить', url=bill.pay_url)],
                          [InlineKeyboardButton(text='Проверить оплату', callback_data=f'check_{bill.bill_id}')]]))
 
 
@@ -73,8 +74,8 @@ async def provekra_pay(call: CallbackQuery):
         if str(p2p.check(bill_id=bill).status) == 'PAID':
             await call.message.delete()
             await call.message.answer('Товар успешно оплачен\n'
-                                         'Доставка будет реализована в течении 5 дней\n'
-                                         'Обратная связь по телефону +79165502550', reply_markup=menu)
+                                      'Доставка будет реализована в течении 5 дней\n'
+                                      'Обратная связь по телефону +79165502550', reply_markup=menu)
             await db.update_price(bill)
             a = list(await db.oplata_set_state(bill))
             await db.update_amount_tovarov(a[0], a[1])

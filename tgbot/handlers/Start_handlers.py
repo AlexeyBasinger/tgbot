@@ -7,8 +7,10 @@ from aiogram.types import Message, CallbackQuery
 from aiogram.utils.markdown import hcode
 from tgbot.config import db
 from tgbot.keyboards.inline import menu, code
+from tgbot.misc.decorator import rate_limit
 
 
+@rate_limit(5, 'start')
 async def user_start(message: Message):
     args = message.get_args()
     if args in hcode(await db.args_id()):
@@ -45,6 +47,7 @@ async def user_start(message: Message):
                              f'Затем нажми на кнопку проверить подписку', reply_markup=code)
 
 
+@rate_limit(5, 'start')
 async def start_netdipa(message: Message):
     user_id = int(message.from_user.id)
     if await db.poluchit_poshalusta_id_true(user_id):
@@ -63,20 +66,28 @@ async def start_netdipa(message: Message):
 
 
 async def tovar_pokaz(message: Message):
-    args = message.get_args()
-    a = await db.poluchit_vse_deep_link(int(args))
-    if args in hcode(await db.pokasi_id()):
-        await message.bot.send_photo(chat_id=message.chat.id, photo=a[1],
-                                     caption=f'аритикул: <b>{a[-1]}</b>\n'
-                                             f'название: <b>{a[2]}</b>\n'
-                                             f'количество: <b>{a[-2]}</b>\n'
-                                             f'Описание: <b>{a[3]}</b>\n'
-                                             f'Цена: <b>{a[4]}</b> Руб.',
-                                     parse_mode='HTML',
-                                     reply_markup=InlineKeyboardMarkup(inline_keyboard=[[InlineKeyboardButton(text='💰Купить товар', callback_data=f'buy_tovar_{a[0]}')]]))
+    if message.from_user.id in hcode(await db.args_id()):
+        args = message.get_args()
+        a = await db.poluchit_vse_deep_link(int(args))
+        if args in hcode(await db.pokasi_id()):
+            await message.bot.send_photo(chat_id=message.chat.id, photo=a[1],
+                                         caption=f'аритикул: <b>{a[-1]}</b>\n'
+                                                 f'название: <b>{a[2]}</b>\n'
+                                                 f'количество: <b>{a[-2]}</b>\n'
+                                                 f'Описание: <b>{a[3]}</b>\n'
+                                                 f'Цена: <b>{a[4]}</b> Руб.',
+                                         parse_mode='HTML',
+                                         reply_markup=InlineKeyboardMarkup(inline_keyboard=[[InlineKeyboardButton(
+                                             text='💰Купить товар', callback_data=f'buy_tovar_{a[0]}')]]))
+        else:
+            await message.answer('❌Ошибка❌\n'
+                                 '🔒У вас нет доступа!!!\n'
+                                 'Чтобы использывать бота введите код приглашения,\n'
+                                 'либо пройдите по реферальной ссылке\n'
+                                 f'Если вас никто не пригласил, то просто подпишись на данный канал: https://t.me/testUdemyCors\n'
+                                 f'Затем нажми на кнопку проверить подписку', reply_markup=code)
     else:
-        await message.answer('❌Ошибка❌\n'
-                             '🔒У вас нет доступа!!!\n'
+        await message.answer('Вы не являетесь пользователем бота!!!\n'
                              'Чтобы использывать бота введите код приглашения,\n'
                              'либо пройдите по реферальной ссылке\n'
                              f'Если вас никто не пригласил, то просто подпишись на данный канал: https://t.me/testUdemyCors\n'

@@ -29,10 +29,14 @@ async def tovar_name(message: Message, state: FSMContext):
 
 
 async def tovar_description(message: Message, state: FSMContext):
-    async with state.proxy() as data:
-        data['description'] = message.text
-    await tovar.next()
-    await message.answer('введите цену товара', reply_markup=cancel_inline_button)
+    if len(message.text) > 255:
+        await message.answer('Описание слишком длинное!\n'
+                             'Максимальная длинна 255 символов!')
+    else:
+        async with state.proxy() as data:
+            data['description'] = message.text
+        await tovar.next()
+        await message.answer('введите цену товара', reply_markup=cancel_inline_button)
 
 
 async def tovar_price(message: Message, state: FSMContext):

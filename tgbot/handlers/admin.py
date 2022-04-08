@@ -11,9 +11,11 @@ from aiogram.utils.markdown import hcode
 from tgbot.config import db
 from tgbot.db_api.FSM import price, amount
 from tgbot.keyboards.inline import code, menu_admin, menu_admina_2, cancel_inline_button
+from tgbot.misc.decorator import rate_limit
 from tgbot.payment.QIWI import p2p
 
 
+@rate_limit(5)
 async def admin_start(message: Message):
     args = message.get_args()
     if args in hcode(await db.args_id()):
@@ -172,6 +174,7 @@ async def provekra_pay_admin(call: CallbackQuery):
         await call.message.answer('Оплата не найдена')
 
 
+@rate_limit(5)
 async def start_netdipa_admin(message: Message):
     user_id = int(message.from_user.id)
     if await db.poluchit_poshalusta_id_true(user_id):
@@ -219,6 +222,7 @@ async def change_price_main(message: Message, state: FSMContext):
         await message.answer('Цена - это число без потусторонних символов!')
 
 
+@rate_limit(5)
 async def tovar_pokaz_admin(message: Message):
     args = message.get_args()
     a = await db.poluchit_vse_deep_link(int(args))

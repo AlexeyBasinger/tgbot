@@ -17,6 +17,8 @@ from tgbot.integrations.telegraph.abstract import FileUploader
 from tgbot.integrations.telegraph.client import Telegraph
 from tgbot.middlewares.db import DbMiddleware
 from tgbot.middlewares.integration import IntegrationMiddleware
+from tgbot.middlewares.throttling import ThrottlingMiddleware
+from tgbot.misc.decorator import rate_limit
 
 logger = logging.getLogger(__name__)
 
@@ -27,7 +29,7 @@ async def on_shutdown(dp: Dispatcher):
 
 
 def register_all_middlewares(dp):
-    dp.setup_middleware(DbMiddleware())
+    dp.middleware.setup(ThrottlingMiddleware())
 
 
 def register_all_filters(dp):

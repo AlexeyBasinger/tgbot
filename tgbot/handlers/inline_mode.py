@@ -21,7 +21,11 @@ async def inline_katalog(query: InlineQuery):
             reply_markup=InlineKeyboardMarkup(inline_keyboard=[[InlineKeyboardButton(
                 text='Показать товар', url=f'https://t.me/udemy_exam_bot?start={a[0]}')]])
         ) for a in lits_tovarov]
-        await query.answer(tovari)
+        if tovari:
+            await query.answer(tovari)
+        else:
+            await query.answer(results=[], switch_pm_text='Товары в базе данных отсутствуют'
+                               , switch_pm_parameter='qwertyqw')
     else:
         await query.answer(results=[], switch_pm_text='Бот недоступен, вы должны войти в него!'
                            , switch_pm_parameter='qwerty')
