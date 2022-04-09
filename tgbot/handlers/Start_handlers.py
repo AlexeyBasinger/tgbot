@@ -1,4 +1,6 @@
 import re
+
+from aiogram.dispatcher import FSMContext
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 import asyncpg
 from aiogram import Dispatcher
@@ -48,7 +50,10 @@ async def user_start(message: Message):
 
 
 @rate_limit(5, 'start')
-async def start_netdipa(message: Message):
+async def start_netdipa(message: Message, state: FSMContext):
+    cur_state = await state.get_state()
+    if cur_state is not None:
+        await state.finish()
     user_id = int(message.from_user.id)
     if await db.poluchit_poshalusta_id_true(user_id):
         await message.answer(f'Поздравляю, вы получили доступ🎉\n'
@@ -66,7 +71,7 @@ async def start_netdipa(message: Message):
 
 
 async def tovar_pokaz(message: Message):
-    if message.from_user.id in hcode(await db.args_id()):
+    if await db.poluchit_poshalusta_id_true(message.from_user.id):
         args = message.get_args()
         a = await db.poluchit_vse_deep_link(int(args))
         if args in hcode(await db.pokasi_id()):
@@ -124,5 +129,5 @@ async def proverka_subscribe(call: CallbackQuery):
 def register_start_handlers(dp: Dispatcher):
     dp.register_message_handler(tovar_pokaz, CommandStart(deep_link=re.compile(r'^[0-9]{1,3}$')))
     dp.register_message_handler(user_start, CommandStart(deep_link=re.compile(r"^[0-9]{4,15}$")))
-    dp.register_message_handler(start_netdipa, CommandStart())
+    dp.register_message_handler(start_netdipa, CommandStart(), state='*')
     dp.register_callback_query_handler(proverka_subscribe, text='proverka_kanal')

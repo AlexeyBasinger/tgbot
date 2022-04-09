@@ -95,8 +95,8 @@ class Database:
         username VARCHAR(255) NULL,
         telegram_id BIGINT NOT NULL UNIQUE,
         priglos VARCHAR(255) NULL,
-        referals INT NULL DEFAULT 0,
-        skidka INT NULL DEFAULT 0
+        referals INT DEFAULT 0,
+        skidka INT DEFAULT 0
         );
         """
         await self.execute(sql, execute=True)
@@ -234,9 +234,9 @@ class Database:
         sql = 'SELECT skidka FROM Users WHERE telegram_id = $1'
         return await self.execute(sql, user_id, fetchval=True)
 
-    async def ubrat_skidku(self, user_id):
-        sql = 'UPDATE Users SET skidka = 0 WHERE telegram_id = $1'
-        await self.execute(sql, user_id, execute=True)
+    async def ubrat_skidku(self, reset_sidka, user_id):
+        sql = 'UPDATE Users SET skidka = $1 WHERE telegram_id = $2'
+        await self.execute(sql, reset_sidka, user_id, execute=True)
 
     async def dobavit_skidku(self, user_id, skidka):
         sql = 'UPDATE Users SET skidka = $2 WHERE telegram_id = $1'

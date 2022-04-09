@@ -9,7 +9,7 @@ from aiogram.types import Message, CallbackQuery, InlineKeyboardMarkup, InlineKe
 from aiogram.utils.markdown import hcode
 
 from tgbot.config import db
-from tgbot.db_api.FSM import price, amount
+from tgbot.db_api.FSM import price, amount, oplata_ru
 from tgbot.keyboards.inline import code, menu_admin, menu_admina_2, cancel_inline_button
 from tgbot.misc.decorator import rate_limit
 from tgbot.payment.QIWI import p2p
@@ -155,8 +155,9 @@ async def proverka_subscribe_admin(call: CallbackQuery):
                                   f'Затем нажми на кнопку проверить подписку', reply_markup=code)
 
 
-async def provekra_pay_admin(call: CallbackQuery):
+async def provekra_pay_admin(call: CallbackQuery, state: FSMContext):
     await call.answer(cache_time=10)
+    data = await state.get_data()
     bill = call.data[6:]
     info = await db.check_bill_id(bill)
     if info != False:
@@ -168,6 +169,8 @@ async def provekra_pay_admin(call: CallbackQuery):
             await db.update_price(bill)
             a = list(await db.oplata_set_state(bill))
             await db.update_amount_tovarov(a[0], a[1])
+            await db.dobavit_skidku(call.from_user.id, data.get('skidka'))
+            await state.finish()
         else:
             await call.message.answer('Вы не оплатили счет')
     else:
@@ -175,7 +178,10 @@ async def provekra_pay_admin(call: CallbackQuery):
 
 
 @rate_limit(5)
-async def start_netdipa_admin(message: Message):
+async def start_netdipa_admin(message: Message, state: FSMContext):
+    cur_state = await state.get_state()
+    if cur_state is not None:
+        await state.finish()
     user_id = int(message.from_user.id)
     if await db.poluchit_poshalusta_id_true(user_id):
         await message.answer(f'Поздравляю, вы получили доступ🎉\n'
@@ -285,8 +291,8 @@ def register_admin(dp: Dispatcher):
     dp.register_callback_query_handler(rassilka_waiting, text='rassilka_pls')
     dp.register_message_handler(rassilka_go, state='text_rassilki')
     dp.register_callback_query_handler(proverka_subscribe_admin, text='proverka_kanal', is_admin=True)
-    dp.register_callback_query_handler(provekra_pay_admin, text_contains='check_', is_admin=True)
-    dp.register_message_handler(start_netdipa_admin, CommandStart(), is_admin=True)
+    dp.register_callback_query_handler(provekra_pay_admin, text_contains='check_', is_admin=True, state=oplata_ru.street)
+    dp.register_message_handler(start_netdipa_admin, CommandStart(), is_admin=True, state='*')
     dp.register_callback_query_handler(change_price_articul, text='change_price', is_admin=True)
     dp.register_message_handler(change_price, state=price.articul, is_admin=True)
     dp.register_message_handler(change_price_main, state=price.price, is_admin=True)
