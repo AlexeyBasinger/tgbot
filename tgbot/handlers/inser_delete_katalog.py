@@ -41,36 +41,45 @@ async def tovar_description(message: Message, state: FSMContext):
 
 async def tovar_price(message: Message, state: FSMContext):
     try:
-        async with state.proxy() as data:
-            data['price'] = int(message.text)
-            await tovar.next()
-            await message.answer('введите количество товара', reply_markup=cancel_inline_button)
+        if int(message.text) >= 60000:
+            async with state.proxy() as data:
+                data['price'] = int(message.text)
+                await tovar.next()
+                await message.answer('введите количество товара', reply_markup=cancel_inline_button)
+        else:
+            await message.answer('Максимально возможная цена 60000')
     except ValueError:
         await message.answer('Пришли цену без посторонних символов')
 
 
 async def tovar_amount(message: Message, state: FSMContext):
     try:
-        async with state.proxy() as data:
-            data['amount'] = int(message.text)
-        await tovar.next()
-        await message.answer('введите артикул', reply_markup=cancel_inline_button)
+        if int(message.text) < 2147483647:
+            async with state.proxy() as data:
+                data['amount'] = int(message.text)
+            await tovar.next()
+            await message.answer('введите артикул', reply_markup=cancel_inline_button)
+        else:
+            await message.answer('Слишком большое значение')
     except ValueError:
         await message.answer('Введите только число!')
 
 
 async def tovar_articul(message: Message, state: FSMContext):
     try:
-        async with state.proxy() as data:
-            data['articul'] = int(message.text)
-        data = await state.get_data()
-        await message.bot.send_photo(chat_id=message.chat.id, photo=data.get('photo'),
-                                     caption=f'аритикул: <b>{data.get("articul")}</b>\n'
-                                             f'название: <b>{data.get("name")}</b>\n'
-                                             f'количество: <b>{data.get("amount")}</b>\n'
-                                             f'Описание: <b>{data.get("description")}</b>\n'
-                                             f'Цена: <b>{data.get("price")}</b> Руб.',
-                                     parse_mode='HTML', reply_markup=potverdit_tovar)
+        if int(message.text) < 2147483647:
+            async with state.proxy() as data:
+                data['articul'] = int(message.text)
+            data = await state.get_data()
+            await message.bot.send_photo(chat_id=message.chat.id, photo=data.get('photo'),
+                                         caption=f'аритикул: <b>{data.get("articul")}</b>\n'
+                                                 f'название: <b>{data.get("name")}</b>\n'
+                                                 f'количество: <b>{data.get("amount")}</b>\n'
+                                                 f'Описание: <b>{data.get("description")}</b>\n'
+                                                 f'Цена: <b>{data.get("price")}</b> Руб.',
+                                         parse_mode='HTML', reply_markup=potverdit_tovar)
+        else:
+            await message.answer('слишком большое значение!')
     except ValueError:
         await message.answer('Введите только число(номер артикула)!')
 

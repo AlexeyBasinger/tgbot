@@ -34,7 +34,7 @@ nasad.insert(nasad_menu)
 
 
 
-menu_admina_2 = InlineKeyboardMarkup(row_width=2)
+menu_admina_2 = InlineKeyboardMarkup(row_width=1)
 rassilka_admin = InlineKeyboardButton(text='📢Рассылка', callback_data='rassilka_pls')
 insert = InlineKeyboardButton(text='🎁Добавить товар', callback_data='dobavit_tovar')
 udalit = InlineKeyboardButton(text='✂️Удалить товар', callback_data='udalit_tovar')
@@ -44,8 +44,8 @@ menu_admina_2.insert(insert)
 menu_admina_2.insert(udalit)
 menu_admina_2.insert(change_amount)
 menu_admina_2.insert(change_price)
-menu_admina_2.insert(rassilka_admin)
-menu_admina_2.insert(nasad_menu)
+menu_admina_2.row(rassilka_admin, nasad_menu)
+
 
 
 

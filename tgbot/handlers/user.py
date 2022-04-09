@@ -20,7 +20,7 @@ async def nasad_v_menu(call: CallbackQuery):
 
 async def proverka_bought_tovar(call: CallbackQuery):
     a = await db.prosmot_tovar_bought(call.from_user.id)
-    result = 'Вы заказали:\n'
+    result = 'Вы заказали:\n\n'
     if a:
         for b in a:
             result += f'{b[0]} в количестве: {b[1]}\n'
