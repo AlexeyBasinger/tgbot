@@ -15,10 +15,8 @@ from tgbot.handlers.inser_delete_katalog import register_insert_delete_handlers
 from tgbot.handlers.user import register_user
 from tgbot.integrations.telegraph.abstract import FileUploader
 from tgbot.integrations.telegraph.client import Telegraph
-from tgbot.middlewares.db import DbMiddleware
 from tgbot.middlewares.integration import IntegrationMiddleware
 from tgbot.middlewares.throttling import ThrottlingMiddleware
-from tgbot.misc.decorator import rate_limit
 
 logger = logging.getLogger(__name__)
 
