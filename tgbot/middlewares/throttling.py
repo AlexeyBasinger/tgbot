@@ -58,7 +58,6 @@ class ThrottlingMiddleware(BaseMiddleware):
         elif throttled.exceeded_count == 3:
             await message.reply('Я тебя предупреждал\n'
                                 f'Ты больше неможешь отсылать команду старт {delta} секунд!')
-            return
         await asyncio.sleep(delta)
         thr = await dispatcher.check_key(key)
         if thr.exceeded_count == throttled.exceeded_count:
