@@ -7,8 +7,7 @@ from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters import CommandStart
 from aiogram.types import Message, CallbackQuery, InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.utils.markdown import hcode
-
-from tgbot.config import db
+from tgbot.payment.QIWI import db
 from tgbot.db_api.FSM import price, amount, oplata_ru
 from tgbot.keyboards.inline import code, menu_admin, menu_admina_2, cancel_inline_button
 from tgbot.misc.decorator import rate_limit

@@ -4,6 +4,10 @@ import asyncpg
 from asyncpg import Connection
 from asyncpg.pool import Pool
 
+from tgbot.config import load_config
+
+config = load_config(".env")
+
 
 class Database:
 
@@ -12,10 +16,10 @@ class Database:
 
     async def create(self):
         self.pool = await asyncpg.create_pool(
-            host='db',
-            password='670524',
-            user='postgres',
-            database='postgres'
+            host=config.db.host,
+            password=config.db.password,
+            user=config.db.user,
+            database=config.db.database
         )
 
     async def execute(self, command, *args,
@@ -265,7 +269,6 @@ class Database:
     async def help_me(self, articul):
         sql = "SELECT True FROM katalog WHERE articul = $1"
         return await self.execute(sql, articul, fetchval=True)
-
 
     async def update_amount_articul(self, amount, articul):
         sql = 'UPDATE katalog SET amount = $1 WHERE articul = $2'

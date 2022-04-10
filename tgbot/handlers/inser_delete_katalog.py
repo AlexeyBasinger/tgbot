@@ -1,8 +1,7 @@
 from aiogram import Dispatcher
 from aiogram.dispatcher import FSMContext
 from aiogram.types import CallbackQuery, Message, ContentType
-
-from tgbot.config import db
+from tgbot.payment.QIWI import db
 from tgbot.db_api.FSM import tovar
 from tgbot.keyboards.inline import cancel_inline_button, menu, potverdit_tovar, menu_admin
 

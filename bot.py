@@ -4,7 +4,6 @@ from aiogram import Bot, Dispatcher
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from aiogram.contrib.fsm_storage.redis import RedisStorage2
 from tgbot.config import load_config
-from tgbot.config import db
 from tgbot.filters.admin import AdminFilter
 from tgbot.handlers.Start_handlers import register_start_handlers
 from tgbot.handlers.admin import register_admin
@@ -17,6 +16,7 @@ from tgbot.integrations.telegraph.abstract import FileUploader
 from tgbot.integrations.telegraph.client import Telegraph
 from tgbot.middlewares.integration import IntegrationMiddleware
 from tgbot.middlewares.throttling import ThrottlingMiddleware
+from tgbot.payment.QIWI import db
 
 logger = logging.getLogger(__name__)
 

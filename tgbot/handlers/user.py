@@ -1,6 +1,6 @@
 from aiogram import Dispatcher
 from aiogram.types import CallbackQuery
-from tgbot.config import db
+from tgbot.payment.QIWI import db
 from tgbot.keyboards.inline import menu, nasad
 
 

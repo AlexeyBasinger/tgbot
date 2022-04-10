@@ -3,7 +3,7 @@ from aiogram import Dispatcher
 from aiogram.dispatcher import FSMContext
 from aiogram.types import CallbackQuery, Message
 from aiogram.utils.markdown import hcode
-from tgbot.config import db
+from tgbot.payment.QIWI import db
 from tgbot.keyboards.inline import code, menu
 
 

@@ -1,5 +1,4 @@
 import re
-
 from aiogram.dispatcher import FSMContext
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 import asyncpg
@@ -7,7 +6,7 @@ from aiogram import Dispatcher
 from aiogram.dispatcher.filters import CommandStart
 from aiogram.types import Message, CallbackQuery
 from aiogram.utils.markdown import hcode
-from tgbot.config import db
+from tgbot.payment.QIWI import db
 from tgbot.keyboards.inline import menu, code
 from tgbot.misc.decorator import rate_limit
 

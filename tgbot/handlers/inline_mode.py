@@ -1,8 +1,7 @@
 from aiogram import Dispatcher
 from aiogram.types import InlineQuery, InlineQueryResultArticle, InputTextMessageContent, InlineKeyboardMarkup, \
     InlineKeyboardButton
-
-from tgbot.config import db
+from tgbot.payment.QIWI import db
 
 
 async def inline_katalog(query: InlineQuery):

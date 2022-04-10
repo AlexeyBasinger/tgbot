@@ -1,8 +1,5 @@
 from dataclasses import dataclass
 from environs import Env
-from tgbot.db_api.postgreSQL import Database
-
-db = Database()
 
 
 @dataclass
