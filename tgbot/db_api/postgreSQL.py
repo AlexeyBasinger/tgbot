@@ -273,3 +273,7 @@ class Database:
     async def update_amount_articul(self, amount, articul):
         sql = 'UPDATE katalog SET amount = $1 WHERE articul = $2'
         await self.execute(sql, amount, articul, execute=True)
+
+    async def true_articul(self, articul):
+        sql = 'SELECT True FROM katalog WHERE articul = $1'
+        return await self.execute(sql, articul, fetchval=True)

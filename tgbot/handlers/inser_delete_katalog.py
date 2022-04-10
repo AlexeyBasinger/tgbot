@@ -66,19 +66,22 @@ async def tovar_amount(message: Message, state: FSMContext):
 
 async def tovar_articul(message: Message, state: FSMContext):
     try:
-        if int(message.text) < 2147483647:
-            async with state.proxy() as data:
-                data['articul'] = int(message.text)
-            data = await state.get_data()
-            await message.bot.send_photo(chat_id=message.chat.id, photo=data.get('photo'),
-                                         caption=f'аритикул: <b>{data.get("articul")}</b>\n'
-                                                 f'название: <b>{data.get("name")}</b>\n'
-                                                 f'количество: <b>{data.get("amount")}</b>\n'
-                                                 f'Описание: <b>{data.get("description")}</b>\n'
-                                                 f'Цена: <b>{data.get("price")}</b> Руб.',
-                                         parse_mode='HTML', reply_markup=potverdit_tovar)
+        if await db.true_articul(int(message.text)):
+            await message.answer('Товар с таким артикулом уже существует!')
         else:
-            await message.answer('слишком большое значение!')
+            if int(message.text) < 2147483647:
+                async with state.proxy() as data:
+                    data['articul'] = int(message.text)
+                data = await state.get_data()
+                await message.bot.send_photo(chat_id=message.chat.id, photo=data.get('photo'),
+                                             caption=f'аритикул: <b>{data.get("articul")}</b>\n'
+                                                     f'название: <b>{data.get("name")}</b>\n'
+                                                     f'количество: <b>{data.get("amount")}</b>\n'
+                                                     f'Описание: <b>{data.get("description")}</b>\n'
+                                                     f'Цена: <b>{data.get("price")}</b> Руб.',
+                                             parse_mode='HTML', reply_markup=potverdit_tovar)
+            else:
+                await message.answer('слишком большое значение!')
     except ValueError:
         await message.answer('Введите только число(номер артикула)!')
 
