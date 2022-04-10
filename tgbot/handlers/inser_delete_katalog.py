@@ -40,7 +40,7 @@ async def tovar_description(message: Message, state: FSMContext):
 
 async def tovar_price(message: Message, state: FSMContext):
     try:
-        if int(message.text) >= 60000:
+        if int(message.text) < 60000:
             async with state.proxy() as data:
                 data['price'] = int(message.text)
                 await tovar.next()

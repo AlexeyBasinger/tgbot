@@ -290,7 +290,8 @@ def register_admin(dp: Dispatcher):
     dp.register_callback_query_handler(rassilka_waiting, text='rassilka_pls')
     dp.register_message_handler(rassilka_go, state='text_rassilki')
     dp.register_callback_query_handler(proverka_subscribe_admin, text='proverka_kanal', is_admin=True)
-    dp.register_callback_query_handler(provekra_pay_admin, text_contains='check_', is_admin=True, state=oplata_ru.street)
+    dp.register_callback_query_handler(provekra_pay_admin, text_contains='check_', is_admin=True,
+                                       state=oplata_ru.street)
     dp.register_message_handler(start_netdipa_admin, CommandStart(), is_admin=True, state='*')
     dp.register_callback_query_handler(change_price_articul, text='change_price', is_admin=True)
     dp.register_message_handler(change_price, state=price.articul, is_admin=True)
